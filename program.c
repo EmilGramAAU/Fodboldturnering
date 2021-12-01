@@ -74,7 +74,7 @@ int main(void)
 void print_list(Team teams[])
 {
 
-    printf("\n\n%-7s %-7s %-7s %-7s %-7s\n\n", "TEAM", "POINT", "WINS", "LOSES", "GOAL DIFFERENCE");
+    printf("\n\n\033[1;37m%-7s %-7s %-7s %-7s %-7s\033[0m\n\n", "TEAM", "POINT", "WINS", "LOSES", "GOAL DIFFERENCE");
 
     for (int i = 0; i < TEAMS; i++)
     {
