@@ -2,7 +2,7 @@
 //* Programmer: Emil Gram Jensen
 //* Class: Software (Gruppe 8)
 //* Programming Assignment: Eksamensopgave 3
-//* Date: 28/11/21
+//* Date:
 //***************************************************
 
 #include <stdio.h>
@@ -20,6 +20,7 @@ void clear_console();
 void get_matches_from_file();
 int exits_in_array();
 int add_match_to_array();
+int calculate_points();
 
 // STRUCTS
 typedef struct
@@ -28,6 +29,7 @@ typedef struct
     int goals;
     int goals_against;
     int point;
+    int goal_difference;
 } Team;
 
 typedef struct
@@ -48,12 +50,18 @@ typedef struct
 
 int main(void)
 {
-    srand(time(NULL));
+
+    // INITIALIZE STRUCT ARRAYS
     Match matches[MATCHES];
     Team teams[TEAMS];
 
     clear_console();
     get_matches_from_file(matches, teams);
+
+    for (int i = 0; i < TEAMS; i++)
+    {
+        printf("%s: %d (%d - %d) (%d)\n", teams[i].name[0], teams[i].point, teams[i].goals, teams[i].goals_against, teams[i].goal_difference);
+    }
 }
 
 /************************************************************
@@ -73,7 +81,7 @@ void get_matches_from_file(Match matches[], Team teams[])
         Match m;
         int i = 0, team = 0;
 
-        while (fscanf(fp, "%s %s %s %s - %s %d - %d %d", m.weekday, m.date, m.time, m.home_team.name, m.away_team.name, &m.home_team.goals, &m.away_team.goals, &m.viewers) == 8)
+        while (fscanf(fp, "%s     %s %s     %s - %s     %d - %d     %d", m.weekday, m.date, m.time, m.home_team.name, m.away_team.name, &m.home_team.goals, &m.away_team.goals, &m.viewers) == 8)
         {
 
             team += add_match_to_array(matches, m, i, team, teams);
@@ -103,14 +111,41 @@ int add_match_to_array(Match matches[], Match m, int i, int team, Team teams[])
         teams[team].name[0] = matches[i].home_team.name;
         teams[team].goals = matches[i].home_team.goals;
         teams[team].goals_against = matches[i].away_team.goals;
+        teams[team].point = calculate_points(matches[i]);
+        teams[team].goal_difference = matches[i].home_team.goals - matches[i].away_team.goals;
 
         return 1;
     }
 
     teams[exits].goals += m.home_team.goals;
     teams[exits].goals_against += m.away_team.goals;
+    teams[exits].point += calculate_points(matches[i]);
+    teams[exits].goal_difference += matches[i].home_team.goals - matches[i].away_team.goals;
 
     return 0;
+}
+
+/************************************************************
+ * Function: calculate_points()					     
+ * Description: Calculate points and adds them to the team
+ * Input parameters: 			 
+ * Returns: 
+ *************************************************************/
+int calculate_points(Match m)
+{
+
+    int point = 0;
+
+    if (m.home_team.goals > m.away_team.goals)
+    {
+        point += 3;
+    }
+    else if (m.home_team.goals == m.away_team.goals)
+    {
+        point += 1;
+    }
+
+    return point;
 }
 
 /************************************************************
