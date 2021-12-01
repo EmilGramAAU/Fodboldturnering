@@ -21,6 +21,8 @@ void get_matches_from_file();
 int exits_in_array();
 int add_match_to_array();
 int calculate_points();
+int compare();
+void print_list();
 
 // STRUCTS
 typedef struct
@@ -58,10 +60,28 @@ int main(void)
     clear_console();
     get_matches_from_file(matches, teams);
 
+    qsort(teams, TEAMS, sizeof(*teams), compare);
+
+    print_list(teams);
+}
+
+/************************************************************
+ * Function: print_list()					     
+ * Description: Prints the list
+ * Input parameters: 			 
+ * Returns: 
+ *************************************************************/
+void print_list(Team teams[])
+{
+
+    printf("\n\n%-7s %-7s %-7s %-7s %-7s\n\n", "TEAM", "POINT", "WINS", "LOSES", "GOAL DIFFERENCE");
+
     for (int i = 0; i < TEAMS; i++)
     {
-        printf("%s: %d (%d - %d) (%d)\n", teams[i].name[0], teams[i].point, teams[i].goals, teams[i].goals_against, teams[i].goal_difference);
+        printf("%-7s %-7d %-7d %-7d %-7d\n", teams[i].name[0], teams[i].point, teams[i].goals, teams[i].goals_against, teams[i].goal_difference);
     }
+
+    printf("\n\n");
 }
 
 /************************************************************
@@ -167,6 +187,32 @@ int exits_in_array(Team teams[], char *name, int team)
     }
 
     return -1;
+}
+
+/************************************************************
+ * Function: compare()					     
+ * Description: 
+ * Input parameters: none			 
+ * Returns: none
+ *************************************************************/
+int compare(const void *a, const void *b)
+{
+    const Team *pa = a;
+    const Team *pb = b;
+
+    int diff = pb->point - pa->point;
+
+    if (diff == 0)
+    {
+        if (pb->goal_difference < pa->goal_difference)
+            diff = -1;
+        else if (pb->goal_difference > pa->goal_difference)
+            diff = +1;
+        else
+            diff = 0;
+    }
+
+    return diff;
 }
 
 /************************************************************
