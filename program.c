@@ -65,7 +65,7 @@ int main(void)
 void get_matches_from_file(Match matches[], Team teams[])
 {
 
-    FILE *fp = fopen("kampe-2020-2021.txt", "r");
+    FILE *fp = fopen("database/kampe-2020-2021.txt", "r");
 
     if (fp)
     {
