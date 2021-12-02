@@ -24,30 +24,29 @@ int calculate_points();
 int compare();
 void print_list();
 
-// STRUCTS
-typedef struct
+typedef struct // TEAM STRUCT
 {
-    char *name[1];
-    int goals;
-    int goals_against;
-    int point;
-    int goal_difference;
+    char *name[1];       // TEAM NAME
+    int goals;           // TEAM GOALS IN SEASON
+    int goals_against;   // TEAM GOALS AGAINST
+    int point;           // TOTAL TEAM POINTS IN SEASON
+    int goal_difference; // THE TEAM GOAL DIFFERENCE IN SEASON
 } Team;
 
-typedef struct
+typedef struct // TEAM DETAILS IN MATCH
 {
-    int goals;
-    char name[4];
+    int goals;    // GOALS TEAM SCORED IN MATCH
+    char name[4]; // TEAM NAME
 } MatchTeam;
 
-typedef struct
+typedef struct // MATCH STRUCT
 {
-    char weekday[5];
-    char date[10];
-    char time[10];
-    MatchTeam home_team;
-    MatchTeam away_team;
-    int viewers;
+    char weekday[5];     // THE DAY THE MATCH WAS PLAYED
+    char date[10];       // THE DATE THE MATCH WAS PLAYED
+    char time[10];       // THE TIME THE MATCH WAS PLAYED
+    MatchTeam home_team; // HOME TEAM DETAILS IN THE MATCH
+    MatchTeam away_team; // AWAY TEAM DETAILS IN THE MATCH
+    int viewers;         // THE NUMBER OF VIEWERS IN MATCH
 } Match;
 
 /************************************************************
@@ -58,12 +57,12 @@ int main(void)
 {
 
     // INITIALIZE STRUCT ARRAYS
-    Match matches[MATCHES];
-    Team teams[TEAMS];
+    Match matches[MATCHES]; // ARRAY WITH ALL MATCHES
+    Team teams[TEAMS];      // ARRAY WITH ALL TEAMS
 
     get_matches_from_file(matches, teams);
 
-    qsort(teams, TEAMS, sizeof(*teams), compare);
+    qsort(teams, TEAMS, sizeof(*teams), compare); // SORT THE TEAM BY POINTS
 
     clear_console();
     print_list(teams);
@@ -72,8 +71,8 @@ int main(void)
 /************************************************************
  * Function: print_list()					     
  * Description: Prints the list
- * Input parameters: 			 
- * Returns: 
+ * Input parameters: The struct array with all teams			 
+ * Returns: nothing
  *************************************************************/
 void print_list(Team teams[])
 {
@@ -91,8 +90,8 @@ void print_list(Team teams[])
 /************************************************************
  * Function: get_matches_from_file()					     
  * Description: Gets the match history from the data-file.
- * Input parameters: 			 
- * Returns: 
+ * Input parameters: The struct arrays with all teams and matches	 
+ * Returns: noting
  *************************************************************/
 void get_matches_from_file(Match matches[], Team teams[])
 {
@@ -120,8 +119,8 @@ void get_matches_from_file(Match matches[], Team teams[])
  * Function: add_match_to_array()					     
  * Description: Adds the match to the array over matches.
  * Description: Adds the team to the array of teams if not exits.
- * Input parameters: 			 
- * Returns: 
+ * Input parameters: Matches and Teams array, Specific match and team
+ * Returns: a value of either 0 or 1, which indicates whether a new team has been created
  *************************************************************/
 int add_match_to_array(Match matches[], Match m, int i, int team, Team teams[])
 {
@@ -130,7 +129,7 @@ int add_match_to_array(Match matches[], Match m, int i, int team, Team teams[])
 
     int exits = exits_in_array(teams, matches[i].home_team.name, team);
 
-    if (exits == -1)
+    if (exits == -1) // CHECKS IF TEAM ALREADY EXITS. IF NOT CREATE TEAM.
     {
         teams[team].name[0] = matches[i].home_team.name;
         teams[team].goals = matches[i].home_team.goals;
@@ -141,6 +140,7 @@ int add_match_to_array(Match matches[], Match m, int i, int team, Team teams[])
         return 1;
     }
 
+    // IF TEAM ALREADY EXITS - ADD THE NEW DATA FROM MATCH.
     teams[exits].goals += m.home_team.goals;
     teams[exits].goals_against += m.away_team.goals;
     teams[exits].point += calculate_points(matches[i]);
@@ -152,31 +152,29 @@ int add_match_to_array(Match matches[], Match m, int i, int team, Team teams[])
 /************************************************************
  * Function: calculate_points()					     
  * Description: Calculate points and adds them to the team
- * Input parameters: 			 
- * Returns: 
+ * Input parameters: The current match
+ * Returns: The number of points the team needs for the match.
  *************************************************************/
 int calculate_points(Match m)
 {
 
-    int point = 0;
-
     if (m.home_team.goals > m.away_team.goals)
     {
-        point += 3;
+        return 3;
     }
     else if (m.home_team.goals == m.away_team.goals)
     {
-        point += 1;
+        return 1;
     }
 
-    return point;
+    return 0;
 }
 
 /************************************************************
  * Function: exits_in_array()					     
  * Description: Check if the teams already exits
- * Input parameters: 			 
- * Returns: 
+ * Input parameters: Array with all teams, team name and the number of teams.	 
+ * Returns: Index in teams array
  *************************************************************/
 int exits_in_array(Team teams[], char *name, int team)
 {
@@ -184,9 +182,9 @@ int exits_in_array(Team teams[], char *name, int team)
     for (int i = 0; i < team; i++)
     {
 
-        if (strcmp(teams[i].name[0], name) == 0)
+        if (strcmp(teams[i].name[0], name) == 0) // COMPARE TWO STRINGS
         {
-            return i;
+            return i; // THE INDEX IN TEAMS ARRAY
         }
     }
 
@@ -195,18 +193,18 @@ int exits_in_array(Team teams[], char *name, int team)
 
 /************************************************************
  * Function: compare()					     
- * Description: 
- * Input parameters: none			 
- * Returns: none
+ * Description: Compare the data and sort it.
+ * Input parameters: arrays		 
+ * Returns: The diff between two items in array
  *************************************************************/
 int compare(const void *a, const void *b)
 {
     const Team *pa = a;
     const Team *pb = b;
 
-    int diff = pb->point - pa->point;
+    int diff = pb->point - pa->point; // THE DIFF BETWEEN POINTS
 
-    if (diff == 0)
+    if (diff == 0) // IF NO DIFF BETWEEN POINTS CHECK DIFF BETWEEN GOAL DIFFERENCE
         diff = pb->goal_difference - pa->goal_difference;
 
     return diff;
