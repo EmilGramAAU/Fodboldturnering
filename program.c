@@ -50,6 +50,10 @@ typedef struct
     int viewers;
 } Match;
 
+/************************************************************
+ * Function: main()					     
+ * Description: Runs the program
+ *************************************************************/
 int main(void)
 {
 
@@ -57,11 +61,11 @@ int main(void)
     Match matches[MATCHES];
     Team teams[TEAMS];
 
-    clear_console();
     get_matches_from_file(matches, teams);
 
     qsort(teams, TEAMS, sizeof(*teams), compare);
 
+    clear_console();
     print_list(teams);
 }
 
@@ -203,14 +207,7 @@ int compare(const void *a, const void *b)
     int diff = pb->point - pa->point;
 
     if (diff == 0)
-    {
-        if (pb->goal_difference < pa->goal_difference)
-            diff = -1;
-        else if (pb->goal_difference > pa->goal_difference)
-            diff = +1;
-        else
-            diff = 0;
-    }
+        diff = pb->goal_difference - pa->goal_difference;
 
     return diff;
 }
