@@ -113,6 +113,10 @@ void get_matches_from_file(Match matches[], Team teams[])
 
         fclose(fp);
     }
+    else
+    {
+        printf("CANNOT OPEN FILE");
+    }
 }
 
 /************************************************************
