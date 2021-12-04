@@ -1,2 +1,4 @@
 # Fodboldturnering
- Eksamensprojekt 3
+Eksamensopgave 3  
+Software Engineer  
+Aalborg Universitet København  
