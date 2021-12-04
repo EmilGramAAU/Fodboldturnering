@@ -2,7 +2,7 @@
 //* Programmer: Emil Gram Jensen
 //* Class: Software (Gruppe 8)
 //* Programming Assignment: Eksamensopgave 3
-//* Date:
+//* Date: 05-12-2021
 //***************************************************
 
 #include <stdio.h>
@@ -72,7 +72,6 @@ int main(void)
  * Function: print_list()					     
  * Description: Prints the list
  * Input parameters: The struct array with all teams			 
- * Returns: nothing
  *************************************************************/
 void print_list(Team teams[])
 {
@@ -80,9 +79,7 @@ void print_list(Team teams[])
     printf("\n\n\033[1;37m%-7s %-7s %-7s %-15s %-7s\033[0m\n\n", "TEAM", "POINT", "GOALS", "GOALS AGAINST", "GOAL DIFFERENCE");
 
     for (int i = 0; i < TEAMS; i++)
-    {
         printf("%-7s %-7d %-7d %-15d %-7d\n", teams[i].name[0], teams[i].point, teams[i].goals, teams[i].goals_against, teams[i].goal_difference);
-    }
 
     printf("\n\n");
 }
@@ -91,19 +88,16 @@ void print_list(Team teams[])
  * Function: get_matches_from_file()					     
  * Description: Gets the match history from the data-file.
  * Input parameters: The struct arrays with all teams and matches	 
- * Returns: noting
  *************************************************************/
 void get_matches_from_file(Match matches[], Team teams[])
 {
 
     FILE *fp = fopen("database/kampe-2020-2021.txt", "r");
+    Match m;
+    int i = 0, team = 0;
 
     if (fp)
     {
-
-        Match m;
-        int i = 0, team = 0;
-
         while (fscanf(fp, "%s     %s %s     %s - %s     %d - %d     %d", m.weekday, m.date, m.time, m.home_team.name, m.away_team.name, &m.home_team.goals, &m.away_team.goals, &m.viewers) == 8)
         {
 
@@ -114,9 +108,7 @@ void get_matches_from_file(Match matches[], Team teams[])
         fclose(fp);
     }
     else
-    {
         printf("CANNOT OPEN FILE");
-    }
 }
 
 /************************************************************
@@ -163,13 +155,10 @@ int calculate_points(Match m)
 {
 
     if (m.home_team.goals > m.away_team.goals)
-    {
         return 3;
-    }
+
     else if (m.home_team.goals == m.away_team.goals)
-    {
         return 1;
-    }
 
     return 0;
 }
@@ -184,13 +173,8 @@ int exits_in_array(Team teams[], char *name, int team)
 {
 
     for (int i = 0; i < team; i++)
-    {
-
         if (strcmp(teams[i].name[0], name) == 0) // COMPARE TWO STRINGS
-        {
-            return i; // THE INDEX IN TEAMS ARRAY
-        }
-    }
+            return i;                            // THE INDEX IN TEAMS ARRAY
 
     return -1;
 }
@@ -217,8 +201,6 @@ int compare(const void *a, const void *b)
 /************************************************************
  * Function: clear_console()					     
  * Description: Clears the console
- * Input parameters: none			 
- * Returns: none
  *************************************************************/
 void clear_console()
 {
