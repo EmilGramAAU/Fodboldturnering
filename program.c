@@ -24,6 +24,9 @@ int calculate_points();
 int compare();
 void print_list();
 
+/************************************************************
+/ * Structs
+/***********************************************************/
 typedef struct // TEAM STRUCT
 {
     char *name[1];       // TEAM NAME
@@ -52,7 +55,7 @@ typedef struct // MATCH STRUCT
 /************************************************************
  * Function: main()
  * Description: Runs the program
- *************************************************************/
+ ***********************************************************/
 int main(void)
 {
     // INITIALIZE STRUCT ARRAYS
@@ -100,8 +103,8 @@ void get_matches_from_file(Match matches[], Team teams[])
         while (fscanf(fp, "%s     %s %s     %s - %s     %d - %d     %d", m.weekday, m.date, m.time, m.home_team.name, m.away_team.name, &m.home_team.goals, &m.away_team.goals, &m.viewers) == 8)
         {
             matches[i] = m;
-            team += add_match_to_array(matches[i].home_team.name, m.home_team.goals, m.away_team.goals, teams, team);
-            team += add_match_to_array(matches[i].away_team.name, m.away_team.goals, m.home_team.goals, teams, team);
+            team += add_match_to_array(matches[i].home_team.name, m.home_team.goals, m.away_team.goals, teams, team); // ADD HOME TEAM
+            team += add_match_to_array(matches[i].away_team.name, m.away_team.goals, m.home_team.goals, teams, team); // ADD AWAY TEAM
             i++;
         }
 
