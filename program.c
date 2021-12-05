@@ -15,7 +15,7 @@
 #define MATCHES 132
 #define TEAMS 12
 
-//PROTOTYPES
+// PROTOTYPES
 void clear_console();
 void get_matches_from_file();
 int exits_in_array();
@@ -50,12 +50,11 @@ typedef struct // MATCH STRUCT
 } Match;
 
 /************************************************************
- * Function: main()					     
+ * Function: main()
  * Description: Runs the program
  *************************************************************/
 int main(void)
 {
-
     // INITIALIZE STRUCT ARRAYS
     Match matches[MATCHES]; // ARRAY WITH ALL MATCHES
     Team teams[TEAMS];      // ARRAY WITH ALL TEAMS
@@ -69,9 +68,9 @@ int main(void)
 }
 
 /************************************************************
- * Function: print_list()					     
+ * Function: print_list()
  * Description: Prints the list
- * Input parameters: The struct array with all teams			 
+ * Input parameters: The struct array with all teams
  *************************************************************/
 void print_list(Team teams[])
 {
@@ -85,9 +84,9 @@ void print_list(Team teams[])
 }
 
 /************************************************************
- * Function: get_matches_from_file()					     
+ * Function: get_matches_from_file()
  * Description: Gets the match history from the data-file.
- * Input parameters: The struct arrays with all teams and matches	 
+ * Input parameters: The struct arrays with all teams and matches
  *************************************************************/
 void get_matches_from_file(Match matches[], Team teams[])
 {
@@ -100,8 +99,9 @@ void get_matches_from_file(Match matches[], Team teams[])
     {
         while (fscanf(fp, "%s     %s %s     %s - %s     %d - %d     %d", m.weekday, m.date, m.time, m.home_team.name, m.away_team.name, &m.home_team.goals, &m.away_team.goals, &m.viewers) == 8)
         {
-
-            team += add_match_to_array(matches, m, i, team, teams);
+            matches[i] = m;
+            team += add_match_to_array(matches[i].home_team.name, m.home_team.goals, m.away_team.goals, teams, team);
+            team += add_match_to_array(matches[i].away_team.name, m.away_team.goals, m.home_team.goals, teams, team);
             i++;
         }
 
@@ -112,61 +112,59 @@ void get_matches_from_file(Match matches[], Team teams[])
 }
 
 /************************************************************
- * Function: add_match_to_array()					     
+ * Function: add_match_to_array()
  * Description: Adds the match to the array over matches.
  * Description: Adds the team to the array of teams if not exits.
- * Input parameters: Matches and Teams array, Specific match and team
+ * Input parameters: name, team1 goals, team2 goals, teams array and team.
  * Returns: a value of either 0 or 1, which indicates whether a new team has been created
  *************************************************************/
-int add_match_to_array(Match matches[], Match m, int i, int team, Team teams[])
+int add_match_to_array(char *name, int team1_goals, int team2_goals, Team teams[], int team)
 {
 
-    matches[i] = m;
-
-    int exits = exits_in_array(teams, matches[i].home_team.name, team);
+    int exits = exits_in_array(teams, name, team);
 
     if (exits == -1) // CHECKS IF TEAM ALREADY EXITS. IF NOT CREATE TEAM.
     {
-        teams[team].name[0] = matches[i].home_team.name;
-        teams[team].goals = matches[i].home_team.goals;
-        teams[team].goals_against = matches[i].away_team.goals;
-        teams[team].point = calculate_points(matches[i]);
-        teams[team].goal_difference = matches[i].home_team.goals - matches[i].away_team.goals;
+        teams[team].name[0] = name;
+        teams[team].goals = team1_goals;
+        teams[team].goals_against = team2_goals;
+        teams[team].point = calculate_points(team1_goals, team2_goals);
+        teams[team].goal_difference = team1_goals - team2_goals;
 
         return 1;
     }
 
     // IF TEAM ALREADY EXITS - ADD THE NEW DATA FROM MATCH.
-    teams[exits].goals += m.home_team.goals;
-    teams[exits].goals_against += m.away_team.goals;
-    teams[exits].point += calculate_points(matches[i]);
-    teams[exits].goal_difference += matches[i].home_team.goals - matches[i].away_team.goals;
+    teams[exits].goals += team1_goals;
+    teams[exits].goals_against += team2_goals;
+    teams[exits].point += calculate_points(team1_goals, team2_goals);
+    teams[exits].goal_difference += team1_goals - team2_goals;
 
     return 0;
 }
 
 /************************************************************
- * Function: calculate_points()					     
+ * Function: calculate_points()
  * Description: Calculate points and adds them to the team
- * Input parameters: The current match
+ * Input parameters: team1 and team2 goals
  * Returns: The number of points the team needs for the match.
  *************************************************************/
-int calculate_points(Match m)
+int calculate_points(int team1, int team2)
 {
 
-    if (m.home_team.goals > m.away_team.goals)
+    if (team1 > team2)
         return 3;
 
-    else if (m.home_team.goals == m.away_team.goals)
+    else if (team1 == team2)
         return 1;
 
     return 0;
 }
 
 /************************************************************
- * Function: exits_in_array()					     
+ * Function: exits_in_array()
  * Description: Check if the teams already exits
- * Input parameters: Array with all teams, team name and the number of teams.	 
+ * Input parameters: Array with all teams, team name and the number of teams.
  * Returns: Index in teams array
  *************************************************************/
 int exits_in_array(Team teams[], char *name, int team)
@@ -180,9 +178,9 @@ int exits_in_array(Team teams[], char *name, int team)
 }
 
 /************************************************************
- * Function: compare()					     
+ * Function: compare()
  * Description: Compare the data and sort it.
- * Input parameters: arrays		 
+ * Input parameters: arrays
  * Returns: The diff between two items in array
  *************************************************************/
 int compare(const void *a, const void *b)
@@ -199,14 +197,14 @@ int compare(const void *a, const void *b)
 }
 
 /************************************************************
- * Function: clear_console()					     
+ * Function: clear_console()
  * Description: Clears the console
  *************************************************************/
 void clear_console()
 {
 #ifdef _WIN32
     system("cls");
-#else //In any other OS
+#else // In any other OS
     system("clear");
 #endif
 }
