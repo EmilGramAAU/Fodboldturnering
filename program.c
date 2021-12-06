@@ -24,9 +24,9 @@ int calculate_points();
 int compare();
 void print_list();
 
-/************************************************************
-/ * Structs
-/***********************************************************/
+//************************************************************
+// * Structs
+//***********************************************************/
 typedef struct // TEAM STRUCT
 {
     char *name[1];       // TEAM NAME
@@ -66,7 +66,6 @@ int main(void)
 
     qsort(teams, TEAMS, sizeof(*teams), compare); // SORT THE TEAM BY POINTS
 
-    clear_console();
     print_list(teams);
 }
 
@@ -77,6 +76,8 @@ int main(void)
  *************************************************************/
 void print_list(Team teams[])
 {
+
+    clear_console();
 
     printf("\n\n\033[1;37m%-7s %-7s %-7s %-15s %-7s\033[0m\n\n", "TEAM", "POINT", "GOALS", "GOALS AGAINST", "GOAL DIFFERENCE");
 
