@@ -29,7 +29,7 @@ void print_list();
 //***********************************************************/
 typedef struct // TEAM STRUCT
 {
-    char *name[1];       // TEAM NAME
+    char name[4];        // TEAM NAME
     int goals;           // TEAM GOALS IN SEASON
     int goals_against;   // TEAM GOALS AGAINST
     int point;           // TOTAL TEAM POINTS IN SEASON
@@ -82,7 +82,7 @@ void print_list(Team teams[])
     printf("\n\n\033[1;37m%-7s %-7s %-7s %-15s %-7s\033[0m\n\n", "TEAM", "POINT", "GOALS", "GOALS AGAINST", "GOAL DIFFERENCE");
 
     for (int i = 0; i < TEAMS; i++)
-        printf("%-7s %-7d %-7d %-15d %-7d\n", teams[i].name[0], teams[i].point, teams[i].goals, teams[i].goals_against, teams[i].goal_difference);
+        printf("%-7s %-7d %-7d %-15d %-7d\n", teams[i].name, teams[i].point, teams[i].goals, teams[i].goals_against, teams[i].goal_difference);
 
     printf("\n\n");
 }
@@ -129,7 +129,7 @@ int add_match_to_array(char *name, int team1_goals, int team2_goals, Team teams[
 
     if (exits == -1) // CHECKS IF TEAM ALREADY EXITS. IF NOT CREATE TEAM.
     {
-        teams[team].name[0] = name;
+        strcpy(teams[team].name, name);
         teams[team].goals = team1_goals;
         teams[team].goals_against = team2_goals;
         teams[team].point = calculate_points(team1_goals, team2_goals);
@@ -175,8 +175,8 @@ int exits_in_array(Team teams[], char *name, int team)
 {
 
     for (int i = 0; i < team; i++)
-        if (strcmp(teams[i].name[0], name) == 0) // COMPARE TWO STRINGS
-            return i;                            // THE INDEX IN TEAMS ARRAY
+        if (strcmp(teams[i].name, name) == 0) // COMPARE TWO STRINGS
+            return i;                         // THE INDEX IN TEAMS ARRAY
 
     return -1;
 }
