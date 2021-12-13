@@ -2,14 +2,12 @@
 //* Programmer: Emil Gram Jensen
 //* Class: Software (Gruppe 8)
 //* Programming Assignment: Eksamensopgave 3
-//* Date: 05-12-2021
+//* Date: 13-12-2021
 //***************************************************
 
 #include <stdio.h>
-#include <math.h>
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
+#include <stdlib.h> // clear console
+#include <string.h> // char arrays (string)
 
 // CONSTANTS
 #define MATCHES 132
@@ -72,7 +70,7 @@ int main(void)
 /************************************************************
  * Function: print_list()
  * Description: Prints the list
- * Input parameters: The struct array with all teams
+ * Input parameters: Team teams[]
  *************************************************************/
 void print_list(Team teams[])
 {
@@ -90,7 +88,7 @@ void print_list(Team teams[])
 /************************************************************
  * Function: get_matches_from_file()
  * Description: Gets the match history from the data-file.
- * Input parameters: The struct arrays with all teams and matches
+ * Input parameters: Match matches[], Team teams[]
  *************************************************************/
 void get_matches_from_file(Match matches[], Team teams[])
 {
@@ -184,7 +182,6 @@ int exits_in_array(Team teams[], char *name, int team)
 /************************************************************
  * Function: compare()
  * Description: Compare the data and sort it.
- * Input parameters: arrays
  * Returns: The diff between two items in array
  *************************************************************/
 int compare(const void *a, const void *b)
